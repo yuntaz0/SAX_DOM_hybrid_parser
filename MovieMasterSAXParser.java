@@ -3,14 +3,14 @@ import org.xml.sax.helpers.DefaultHandler;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MasterSAXParser extends DefaultHandler {
+public class MovieMasterSAXParser extends DefaultHandler {
     private static final int BATCH_SIZE = 10;
     private final List<String> batch;
     private boolean isRecording = false;
     private StringBuilder directorFilmsXml = new StringBuilder();
     private String startingId = "0000000000";
 
-    public MasterSAXParser() {
+    public MovieMasterSAXParser() {
         this.batch = new ArrayList<>(BATCH_SIZE);
     }
 
@@ -64,7 +64,7 @@ public class MasterSAXParser extends DefaultHandler {
     }
 
     private void processBatch(List<String> batch) {
-        WorkerDOMParser worker = new WorkerDOMParser(startingId);
+        MovieWorkerDOMParser worker = new MovieWorkerDOMParser(startingId);
         startingId = worker.process(batch);
         batch.clear();
     }

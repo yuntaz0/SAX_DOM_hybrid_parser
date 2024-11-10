@@ -8,12 +8,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class WorkerDOMParser {
+public class MovieWorkerDOMParser {
 
     private List<Movie> movies = new ArrayList<>();
     private String startingId;
 
-    public WorkerDOMParser(String startingId) {
+    public MovieWorkerDOMParser(String startingId) {
         this.startingId = startingId;
     }
 
