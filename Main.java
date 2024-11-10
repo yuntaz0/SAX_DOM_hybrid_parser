@@ -7,19 +7,20 @@ import java.io.*;
 
 public class Main {
 
-    public static final String TEMP_FILE_1 = "sql_commands_start.sql";
-    public static final String TEMP_FILE_2 = "movie_sql_commands.sql";
-    public static final String TEMP_FILE_3 = "sql_commands_end.sql";
-    public static final String TEMP_FILE_4 = "star_sql_commands.sql";
-    public static final String encoding = "ISO-8859-1";
+    private static final String SQL_START = "sql_commands_start.sql";
+    public static final String SQL_MOVIE = "movie_sql_commands.sql";
+    private static final String SQL_END = "sql_commands_end.sql";
+    public static final String SQL_STAR = "star_sql_commands.sql";
+    public static final String SQL_CAST = "cast_sql_commands.sql";
+    private static final String ENCODING = "ISO-8859-1";
     private static final String moviesDataLocation = "./stanford-movies/mains243.xml";
     private static final String starsDataLocation = "./stanford-movies/actors63.xml";
+    private static final String castsDataLocation = "./stanford-movies/casts124.xml";
 
     public static void main(String[] args) {
-        try (FileWriter writer = new FileWriter(TEMP_FILE_1)) {
-
-            System.out.println("Writing file " + TEMP_FILE_1);
+        try (FileWriter writer = new FileWriter(SQL_START)) {
             writer.write("USE moviedb; SET GLOBAL autocommit = 0;" + System.lineSeparator() +
+                    "DROP TABLE IF EXISTS stage_stars_in_movies;" + System.lineSeparator() +
                     "DROP TABLE IF EXISTS stage_movies;" + System.lineSeparator() +
                     "DROP TABLE IF EXISTS stage_stars;" + System.lineSeparator() +
                     "CREATE TABLE stage_movies (" + System.lineSeparator() +
@@ -30,34 +31,46 @@ public class Main {
                     "CREATE TABLE stage_stars (" + System.lineSeparator() +
                     "    id VARCHAR(20) PRIMARY KEY," + System.lineSeparator() +
                     "    name VARCHAR(100) DEFAULT '' NOT NULL," + System.lineSeparator() +
-                    "    birthYear INT);" + System.lineSeparator()
+                    "    birthYear INT);" + System.lineSeparator() +
+                    "CREATE TABLE stage_stars_in_movies (" + System.lineSeparator() +
+                    "    starId VARCHAR(20) NOT NULL," + System.lineSeparator() +
+                    "    movieId VARCHAR(10) NOT NULL," + System.lineSeparator() +
+                    "    PRIMARY KEY (starId, movieId)," + System.lineSeparator() +
+                    "    FOREIGN KEY (starId) REFERENCES stage_stars(id)," + System.lineSeparator() +
+                    "    FOREIGN KEY (movieId) REFERENCES stage_movies(id));" + System.lineSeparator()
             );
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         try {
-            File movieFile = new File(TEMP_FILE_2);
-            if (movieFile.exists()) {
-                movieFile.delete();
-                System.out.println("Existing file deleted: " + TEMP_FILE_2);
+            File existMovieFile = new File(SQL_MOVIE);
+            if (existMovieFile.exists()) {
+                existMovieFile.delete();
+                System.out.println("Existing file deleted: " + SQL_MOVIE);
             }
-            File starFile = new File(TEMP_FILE_4);
-            if (starFile.exists()) {
-                starFile.delete();
-                System.out.println("Existing file deleted: " + TEMP_FILE_2);
+            File existStarsFile = new File(SQL_STAR);
+            if (existStarsFile.exists()) {
+                existStarsFile.delete();
+                System.out.println("Existing file deleted: " + SQL_STAR);
             }
-//            File movieFile = new File(moviesDataLocation);
-//            SAXParserFactory movieFactory = SAXParserFactory.newInstance();
-//            SAXParser saxParser = movieFactory.newSAXParser();
-//            XMLReader movieXmlReader = saxParser.getXMLReader();
-//            MovieMasterSAXParser movieSaxParser = new MovieMasterSAXParser();
-//            movieXmlReader.setContentHandler(movieSaxParser);
-//            InputStreamReader movieReader = new InputStreamReader(new FileInputStream(movieFile), encoding);
-//            System.out.println("MOVIE FILE: SUCCESS");
-//            InputSource inputSource = new InputSource(movieReader);
-//            System.out.println("Starting Movie XML parsing...");
-//            movieXmlReader.parse(inputSource);
+            File existCastsFile = new File(SQL_CAST);
+            if (existCastsFile.exists()) {
+                existCastsFile.delete();
+                System.out.println("Existing file deleted: " + SQL_CAST);
+            }
+
+            File moviesFile = new File(moviesDataLocation);
+            SAXParserFactory movieFactory = SAXParserFactory.newInstance();
+            SAXParser saxParser = movieFactory.newSAXParser();
+            XMLReader movieXmlReader = saxParser.getXMLReader();
+            MovieMasterSAXParser movieSaxParser = new MovieMasterSAXParser();
+            movieXmlReader.setContentHandler(movieSaxParser);
+            InputStreamReader movieReader = new InputStreamReader(new FileInputStream(moviesFile), ENCODING);
+            System.out.println("MOVIE FILE: SUCCESS");
+            InputSource inputSource = new InputSource(movieReader);
+            System.out.println("Starting Movie XML parsing...");
+            movieXmlReader.parse(inputSource);
 
             File starsFile = new File(starsDataLocation);
             SAXParserFactory starsFactory = SAXParserFactory.newInstance();
@@ -65,20 +78,30 @@ public class Main {
             XMLReader starsXmlReader = starsSaxParser.getXMLReader();
             StarMasterSAXParser starParser = new StarMasterSAXParser();
             starsXmlReader.setContentHandler(starParser);
-            InputStreamReader starsReader = new InputStreamReader(new FileInputStream(starsFile), encoding);
+            InputStreamReader starsReader = new InputStreamReader(new FileInputStream(starsFile), ENCODING);
             System.out.println("Stars FILE: SUCCESS");
             InputSource starsInputSource = new InputSource(starsReader);
             System.out.println("Starting Stars XML parsing...");
             starsXmlReader.parse(starsInputSource);
 
-            System.out.println("Stars XML parsing and processing completed.");
+            File castsFile = new File(castsDataLocation);
+            SAXParserFactory castsFactory = SAXParserFactory.newInstance();
+            SAXParser castsSaxParser = castsFactory.newSAXParser();
+            XMLReader castsXmlReader = castsSaxParser.getXMLReader();
+            CastMasterSAXParser castParser = new CastMasterSAXParser();
+            castsXmlReader.setContentHandler(castParser);
+            InputStreamReader castsReader = new InputStreamReader(new FileInputStream(castsFile), ENCODING);
+            System.out.println("Casts FILE: SUCCESS");
+            InputSource castsInputSource = new InputSource(castsReader);
+            System.out.println("Starting Casts XML parsing...");
+            castsXmlReader.parse(castsInputSource);
 
-            System.out.println("XML parsing and processing completed.");
+            System.out.println("XML parsing and processing completed." + System.lineSeparator());
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        try (FileWriter writer = new FileWriter(TEMP_FILE_3)) {
+        try (FileWriter writer = new FileWriter(SQL_END)) {
             writer.write("SET GLOBAL autocommit = 1;");
         } catch (Exception e) {
             e.printStackTrace();
