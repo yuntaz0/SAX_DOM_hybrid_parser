@@ -3,7 +3,7 @@ import java.io.IOException;
 import java.util.List;
 
 public class InsertMovieBatch {
-    private static final String INSERT_SQL_TEMPLATE = "INSERT INTO stage_movies (movie_id, title, year, director) VALUES ('%s', '%s', %d, '%s');";
+    private static final String INSERT_SQL_TEMPLATE = "INSERT INTO stage_movies (id, title, year, director) VALUES ('%s', '%s', %d, '%s');";
 
     public void batchInsertMovies(List<Movie> movies) {
         try (FileWriter writer = new FileWriter(Main.TEMP_FILE_2, true)) {
