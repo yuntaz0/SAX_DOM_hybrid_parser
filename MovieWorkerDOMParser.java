@@ -10,14 +10,9 @@ import java.util.Random;
 
 public class MovieWorkerDOMParser {
 
-    private String startingId;
     private List<Movie> movies = new ArrayList<>();
 
-    public MovieWorkerDOMParser(String startingId) {
-        this.startingId = startingId;
-    }
-
-    public String process(List<String> batch) {
+    public void process(List<String> batch) {
         for (String directorXml : batch) {
             try {
                 DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -39,8 +34,7 @@ public class MovieWorkerDOMParser {
                     NodeList filmGenresList = filmElement.getElementsByTagName("cats");
                     ArrayList<String> filmGenres = parseGenres(filmGenresList);
                     NodeList filmIdList = filmElement.getElementsByTagName("fid");
-                    String filmId = "SFM" + startingId;
-                    startingId = filmId;
+                    String filmId = parseFilmId(filmIdList);
                     Random random = new Random();
                     float filmPrice = (10 + random.nextInt(191)) / 10.0f;
                     float filmRating = random.nextInt(101) / 10.0f;
@@ -54,16 +48,17 @@ public class MovieWorkerDOMParser {
                     movie.setPrice(filmPrice);
                     movie.setRating(filmRating);
                     movie.setVotes(filmVotes);
-                    movies.add(movie);
+                    // ASSUMPTION: fid exist and correct and the film has a name
+                    if (filmName != null && filmId != null && !filmName.contains("\\")) {
+                        movies.add(movie);
+                    }
                 }
-
-                InsertMovieBatch insertMovieBatch = new InsertMovieBatch();
-                insertMovieBatch.batchInsertMovies(movies);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        return startingId;
+        InsertMovieBatch insertMovieBatch = new InsertMovieBatch();
+        insertMovieBatch.batchInsertMovies(movies);
     }
 
     private static Integer parseYear(NodeList yearNodeList) {
@@ -135,4 +130,21 @@ public class MovieWorkerDOMParser {
 
         return genres;
     }
+
+    private static String parseFilmId(NodeList filmIdList) {
+        if (filmIdList == null || filmIdList.getLength() == 0) {
+            System.err.println("No film ID found");
+            return null;
+        }
+
+        String filmId = filmIdList.item(0).getTextContent().trim();
+
+        if (!filmId.isEmpty()) {
+            return "SFM" + filmId;
+        } else {
+            System.err.println("Film ID is empty");
+            return null;
+        }
+    }
+
 }

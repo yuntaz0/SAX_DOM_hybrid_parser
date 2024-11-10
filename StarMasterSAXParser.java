@@ -10,7 +10,6 @@ public class StarMasterSAXParser extends DefaultHandler {
     private final List<String> batch;
     private boolean isRecording = false;
     private StringBuilder actorXml = new StringBuilder();
-    private String startingId = "0000000000";
 
     public StarMasterSAXParser() { this.batch = new ArrayList<>(BATCH_SIZE); }
 
@@ -64,8 +63,8 @@ public class StarMasterSAXParser extends DefaultHandler {
     }
 
     private void processBatch(List<String> batch) {
-        StarWorkerDOMParser worker = new StarWorkerDOMParser(startingId);
-        startingId = worker.process(batch);
+        StarWorkerDOMParser worker = new StarWorkerDOMParser();
+        worker.process(batch);
         batch.clear();
     }
 }

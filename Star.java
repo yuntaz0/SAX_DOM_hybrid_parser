@@ -1,9 +1,9 @@
 public class Star {
     private String id;
     private String name;
-    private int birthYear;
+    private Integer birthYear;
 
-    public Star(String id, String name, int birthYear) {
+    public Star(String id, String name, Integer birthYear) {
         this.id = id;
         this.name = name;
         this.birthYear = birthYear;
@@ -17,7 +17,7 @@ public class Star {
         return name;
     }
 
-    public int getBirthYear() {
+    public Integer getBirthYear() {
         return birthYear;
     }
 
@@ -29,11 +29,11 @@ public class Star {
         this.name = name;
     }
 
-    public void setBirthYear(int birthYear) {
+    public void setBirthYear(Integer birthYear) {
         this.birthYear = birthYear;
     }
 
-    // toString method for easy printing
+    // toString method for easy prIntegering
     @Override
     public String toString() {
         return "Star{" +

@@ -11,13 +11,8 @@ import java.util.List;
 
 public class StarWorkerDOMParser {
     private List<Star> stars = new ArrayList<>();
-    private String startingId;
 
-    public StarWorkerDOMParser(String startingId) {
-        this.startingId = startingId;
-    }
-
-    public String process(List<String> batch) {
+    public void process(List<String> batch) {
         for (String actorXml : batch) {
             try{
                 DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -30,15 +25,21 @@ public class StarWorkerDOMParser {
                 String stagename = parseStagename(stagenameList);
                 NodeList birthYearList = actorElement.getElementsByTagName("dob");
                 Integer birthYear = parseBirthYear(birthYearList);
-                System.out.println("Birth Year: " + birthYear);
-                String starId = incrementId(startingId);
-                startingId = starId;
-                System.out.println("ID: " + starId);
+                String starId;
+                if (stagename == null || stagename.contains("\\")) {
+                    continue;
+                } else if (stagename.length() > 20) {
+                    starId = stagename.substring(0,20).replaceAll("\\s", "_");
+                } else {
+                    starId = stagename.replaceAll("\\s", "");
+                }
+                stars.add(new Star(starId, stagename, birthYear));
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        return startingId;
+        InsertStarBatch insertStarBatch = new InsertStarBatch();
+        insertStarBatch.batchInsertStars(stars);
     }
 
     private static String parseStagename(NodeList stagenameNodeList) {
@@ -50,7 +51,6 @@ public class StarWorkerDOMParser {
         String stagename = stagenameNodeList.item(0).getTextContent().trim();
 
         if (!stagename.isEmpty()) {
-            System.out.println("Stage Name: " + stagename);
             return stagename;
         } else {
             System.err.println("Stage name is empty");
@@ -68,8 +68,7 @@ public class StarWorkerDOMParser {
 
         if (!birthYearStr.isEmpty()) {
             try {
-                int birthYear = Integer.parseInt(birthYearStr);
-                return birthYear;
+                return Integer.parseInt(birthYearStr);
             } catch (NumberFormatException e) {
                 System.err.println("Invalid birth year format: " + birthYearStr);
                 return null;
@@ -78,11 +77,5 @@ public class StarWorkerDOMParser {
             System.err.println("Birth year is empty");
             return null;
         }
-    }
-
-    private static String incrementId(String current) {
-        int length = current.length();
-        int number = Integer.parseInt(current);
-        return String.format("%0" + length + "d", ++number);
     }
 }
