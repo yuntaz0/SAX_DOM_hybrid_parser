@@ -8,15 +8,17 @@ public class InsertMovieBatch {
     public void batchInsertMovies(List<Movie> movies) {
         try (FileWriter writer = new FileWriter(Main.TEMP_FILE_2, true)) {
             for (Movie movie : movies) {
+                String title = movie.getTitle().replace("'", "''"); // Escape single quotes in title
+                String director = movie.getDirector().replace("'", "''"); // Escape single quotes in director
+
                 String insertSql = String.format(INSERT_SQL_TEMPLATE,
                         movie.getId(),
-                        movie.getTitle(),
+                        title,
                         movie.getYear(),
-                        movie.getDirector());
+                        director);
 
                 writer.write(insertSql + System.lineSeparator());
             }
-
         } catch (IOException e) {
             System.err.println("Error writing to file: " + Main.TEMP_FILE_2);
             e.printStackTrace();
