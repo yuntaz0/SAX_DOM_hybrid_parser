@@ -8,6 +8,7 @@ public class MovieMasterSAXParser extends DefaultHandler {
     private final List<String> batch;
     private boolean isRecording = false;
     private StringBuilder directorFilmsXml = new StringBuilder();
+    private String startingId = "0000000000";
 
     public MovieMasterSAXParser() {
         this.batch = new ArrayList<>(BATCH_SIZE);
@@ -63,8 +64,8 @@ public class MovieMasterSAXParser extends DefaultHandler {
     }
 
     private void processBatch(List<String> batch) {
-        MovieWorkerDOMParser worker = new MovieWorkerDOMParser();
-        worker.process(batch);
+        MovieWorkerDOMParser worker = new MovieWorkerDOMParser(startingId);
+        startingId = worker.process(batch);
         batch.clear();
     }
 }

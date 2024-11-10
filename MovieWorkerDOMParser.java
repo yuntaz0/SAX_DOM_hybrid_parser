@@ -4,19 +4,20 @@ import org.xml.sax.InputSource;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.StringReader;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 public class MovieWorkerDOMParser {
 
+    private String startingId;
     private List<Movie> movies = new ArrayList<>();
 
-    public void process(List<String> batch) {
+    public MovieWorkerDOMParser(String startingId) {
+        this.startingId = startingId;
+    }
+
+    public String process(List<String> batch) {
         for (String directorXml : batch) {
             try {
                 DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -38,7 +39,8 @@ public class MovieWorkerDOMParser {
                     NodeList filmGenresList = filmElement.getElementsByTagName("cats");
                     ArrayList<String> filmGenres = parseGenres(filmGenresList);
                     NodeList filmIdList = filmElement.getElementsByTagName("fid");
-                    String filmId = parseFilmId(filmIdList);
+                    String filmId = "SFM" + startingId;
+                    startingId = filmId;
                     Random random = new Random();
                     float filmPrice = (10 + random.nextInt(191)) / 10.0f;
                     float filmRating = random.nextInt(101) / 10.0f;
@@ -61,6 +63,7 @@ public class MovieWorkerDOMParser {
                 e.printStackTrace();
             }
         }
+        return startingId;
     }
 
     private static Integer parseYear(NodeList yearNodeList) {
@@ -132,21 +135,4 @@ public class MovieWorkerDOMParser {
 
         return genres;
     }
-
-    private static String parseFilmId(NodeList filmIdList) {
-        if (filmIdList == null || filmIdList.getLength() == 0) {
-            System.err.println("No film ID found");
-            return null;
-        }
-
-        String filmId = filmIdList.item(0).getTextContent().trim();
-
-        if (!filmId.isEmpty()) {
-            return "SFM" + filmId;
-        } else {
-            System.err.println("Film ID is empty");
-            return null;
-        }
-    }
-
 }
