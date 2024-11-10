@@ -18,12 +18,12 @@ public class Main {
         try (FileWriter writer = new FileWriter(TEMP_FILE_1)) {
 
             System.out.println("Writing file " + TEMP_FILE_1);
-            writer.write("SET GLOBAL autocommit = 0; USE moviedb;" + System.lineSeparator() +
+            writer.write("USE moviedb; SET GLOBAL autocommit = 0;" + System.lineSeparator() +
                     "DROP TABLE IF EXISTS stage_movies;" + System.lineSeparator() +
                     "CREATE TABLE stage_movies (" + System.lineSeparator() +
                     "    id VARCHAR(10) PRIMARY KEY, " + System.lineSeparator() +
                     "    title VARCHAR(100) DEFAULT '' NOT NULL, " + System.lineSeparator() +
-                    "    year INT NOT NULL," + System.lineSeparator() +
+                    "    year INT," + System.lineSeparator() +
                     "    director VARCHAR(100) DEFAULT '' NOT NULL);" + System.lineSeparator());
         } catch (IOException e) {
             e.printStackTrace();
