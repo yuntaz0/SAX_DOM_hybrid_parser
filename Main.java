@@ -3,16 +3,38 @@ import org.xml.sax.XMLReader;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 
 public class Main {
+
+    public static final String TEMP_FILE_1 = "sql_commands_start.sql";
+    public static final String TEMP_FILE_2 = "movie_sql_commands.sql";
+    public static final String TEMP_FILE_3 = "sql_commands_end.sql";
     public static final String encoding = "ISO-8859-1";
     private static final String moviesDataLocation = "./stanford-movies/mains243.xml";
     private static final String starsDataLocation = "./stanford-movies/actors63.xml";
+
     public static void main(String[] args) {
+        try (FileWriter writer = new FileWriter(TEMP_FILE_1)) {
+
+            System.out.println("Writing file " + TEMP_FILE_1);
+            writer.write("SET GLOBAL autocommit = 0; USE moviedb;" + System.lineSeparator() +
+                    "DROP TABLE IF EXISTS stage_movies;" + System.lineSeparator() +
+                    "CREATE TABLE stage_movies (" + System.lineSeparator() +
+                    "    id VARCHAR(10) PRIMARY KEY, " + System.lineSeparator() +
+                    "    title VARCHAR(100) DEFAULT '' NOT NULL, " + System.lineSeparator() +
+                    "    year INT NOT NULL," + System.lineSeparator() +
+                    "    director VARCHAR(100) DEFAULT '' NOT NULL);" + System.lineSeparator());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         try {
+            File file = new File(TEMP_FILE_2);
+            if (file.exists()) {
+                file.delete();
+                System.out.println("Existing file deleted: " + TEMP_FILE_2);
+            }
             File movieFile = new File(moviesDataLocation);
             SAXParserFactory movieFactory = SAXParserFactory.newInstance();
             SAXParser saxParser = movieFactory.newSAXParser();
@@ -40,6 +62,12 @@ public class Main {
             System.out.println("Stars XML parsing and processing completed.");
 
             System.out.println("XML parsing and processing completed.");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        try (FileWriter writer = new FileWriter(TEMP_FILE_3)) {
+            writer.write("SET GLOBAL autocommit = 1;");
         } catch (Exception e) {
             e.printStackTrace();
         }
