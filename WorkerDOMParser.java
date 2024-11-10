@@ -42,9 +42,10 @@ public class WorkerDOMParser {
                     startingId = filmId;
                     System.out.println("ID: " + filmId);
                     Random random = new Random();
-
-                    float filmRating = random.nextFloat() * 10;
-                    System.out.println("Random Rating: " + filmRating);
+                    float filmPrice = (10 + random.nextInt(191)) / 10.0f;
+                    System.out.println("Film Price: " + filmPrice);
+                    float filmRating = random.nextInt(101) / 10.0f;
+                    System.out.println("Rating: " + filmRating);
 
                     int filmVotes = 100 + random.nextInt(901); // Range: 100 to 1000
                     System.out.println("Random Number of Votes: " + filmVotes);

@@ -9,10 +9,11 @@ import java.io.InputStreamReader;
 
 public class Main {
     public static final String encoding = "ISO-8859-1";
-    public static final String fileLocation = "/home/me/Projects/website/hybridParser/hybridParser/src/mains243.xml";
+    private static final String moviesDataLocation = "./stanford-movies/mains243.xml";
+    // private static final String starsDataLocation = "./stanford-movies/casts124.xml";
     public static void main(String[] args) {
         try {
-            File inputFile = new File(fileLocation);
+            File inputFile = new File(moviesDataLocation);
             System.out.println("FILE: SUCCESS");
 
             SAXParserFactory factory = SAXParserFactory.newInstance();
