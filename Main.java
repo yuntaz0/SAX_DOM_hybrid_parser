@@ -12,12 +12,18 @@ public class Main {
     private static final String SQL_END = "sql_commands_end.sql";
     public static final String SQL_STAR = "star_sql_commands.sql";
     public static final String SQL_CAST = "cast_sql_commands.sql";
+    private static final String SQL_COMMIT = "commit_sql_command.sql";
     private static final String ENCODING = "ISO-8859-1";
     private static final String moviesDataLocation = "./stanford-movies/mains243.xml";
     private static final String starsDataLocation = "./stanford-movies/actors63.xml";
     private static final String castsDataLocation = "./stanford-movies/casts124.xml";
 
     public static void main(String[] args) {
+        try (FileWriter writer = new FileWriter(SQL_COMMIT)) {
+            writer.write("COMMIT;" + System.lineSeparator());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         try (FileWriter writer = new FileWriter(SQL_START)) {
             writer.write("USE moviedb; SET GLOBAL autocommit = 0;" + System.lineSeparator() +
                     "DROP TABLE IF EXISTS stage_stars_in_movies;" + System.lineSeparator() +
