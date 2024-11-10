@@ -24,18 +24,18 @@ public class Main {
             InputSource inputSource = new InputSource(movieReader);
             System.out.println("Starting Movie XML parsing...");
             movieXmlReader.parse(inputSource);
-
-            File starsFile = new File(starsDataLocation);
-            SAXParserFactory starsFactory = SAXParserFactory.newInstance();
-            SAXParser starsSaxParser = starsFactory.newSAXParser();
-            XMLReader starsXmlReader = starsSaxParser.getXMLReader();
-            StarMasterSAXParser starParser = new StarMasterSAXParser();
-            starsXmlReader.setContentHandler(starParser);
-            InputStreamReader starsReader = new InputStreamReader(new FileInputStream(starsFile), encoding);
-            System.out.println("Stars FILE: SUCCESS");
-            InputSource starsInputSource = new InputSource(starsReader);
-            System.out.println("Starting Stars XML parsing...");
-            starsXmlReader.parse(starsInputSource);
+//
+//            File starsFile = new File(starsDataLocation);
+//            SAXParserFactory starsFactory = SAXParserFactory.newInstance();
+//            SAXParser starsSaxParser = starsFactory.newSAXParser();
+//            XMLReader starsXmlReader = starsSaxParser.getXMLReader();
+//            StarMasterSAXParser starParser = new StarMasterSAXParser();
+//            starsXmlReader.setContentHandler(starParser);
+//            InputStreamReader starsReader = new InputStreamReader(new FileInputStream(starsFile), encoding);
+//            System.out.println("Stars FILE: SUCCESS");
+//            InputSource starsInputSource = new InputSource(starsReader);
+//            System.out.println("Starting Stars XML parsing...");
+//            starsXmlReader.parse(starsInputSource);
 
             System.out.println("Stars XML parsing and processing completed.");
 
