@@ -5,11 +5,11 @@ import java.util.List;
 public class InsertMovieBatch {
     private static final String INSERT_MOVIE_SQL_TEMPLATE =
             "INSERT IGNORE INTO stage_movies (id, title, year, director) VALUES ('%s', '%s', %d, '%s');";
-    private static final String INSERT_GENRE_SQL_TEMPLATE =
-            "INSERT IGNORE INTO stage_genres (name) VALUES ('%s');";
-    private static final String INSERT_GENRES_IN_MOVIES_SQL_TEMPLATE =
-            "INSERT IGNORE INTO stage_genres_in_movies (movieId, genreId) " +
-                    "VALUES ('%s', (SELECT id FROM stage_genres WHERE name = '%s'));";
+//    private static final String INSERT_GENRE_SQL_TEMPLATE =
+//            "INSERT IGNORE INTO stage_genres (name) VALUES ('%s');";
+//    private static final String INSERT_GENRES_IN_MOVIES_SQL_TEMPLATE =
+//            "INSERT IGNORE INTO stage_genres_in_movies (movieId, genreId) " +
+//                    "VALUES ('%s', (SELECT id FROM stage_genres WHERE name = '%s'));";
     private static final String INSERT_RATING_SQL_TEMPLATE =
             "INSERT IGNORE INTO stage_ratings (movieId, rating, numVotes) VALUES ('%s', %.1f, %d);";
 
