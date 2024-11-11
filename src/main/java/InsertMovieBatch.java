@@ -27,17 +27,17 @@ public class InsertMovieBatch {
 
             sqlStatements.append(movieInsertSql).append(System.lineSeparator());
 
-            if (movie.getGenres() != null) {
-                for (String genre : movie.getGenres()) {
-                    String genreEscaped = genre.replace("'", "''");
-                    String genreInsertSql = String.format(INSERT_GENRE_SQL_TEMPLATE, genreEscaped);
-                    sqlStatements.append(genreInsertSql).append(System.lineSeparator());
-
-                    String genreInMoviesSql = String.format(INSERT_GENRES_IN_MOVIES_SQL_TEMPLATE,
-                            movie.getId(), genreEscaped);
-                    sqlStatements.append(genreInMoviesSql).append(System.lineSeparator());
-                }
-            }
+//            if (movie.getGenres() != null) {
+//                for (String genre : movie.getGenres()) {
+//                    String genreEscaped = genre.replace("'", "''");
+//                    String genreInsertSql = String.format(INSERT_GENRE_SQL_TEMPLATE, genreEscaped);
+//                    sqlStatements.append(genreInsertSql).append(System.lineSeparator());
+//
+//                    String genreInMoviesSql = String.format(INSERT_GENRES_IN_MOVIES_SQL_TEMPLATE,
+//                            movie.getId(), genreEscaped);
+//                    sqlStatements.append(genreInMoviesSql).append(System.lineSeparator());
+//                }
+//            }
 
 
             String ratingInsertSql = String.format(INSERT_RATING_SQL_TEMPLATE,
