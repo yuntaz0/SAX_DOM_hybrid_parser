@@ -31,7 +31,7 @@ public class MovieWorkerDOMParser {
                     String filmName = parseFilmName(filmNameList);
                     NodeList filmYearList = filmElement.getElementsByTagName("year");
                     Integer filmYear = parseYear(filmYearList);
-                    NodeList filmGenresList = filmElement.getElementsByTagName("cats");
+                    NodeList filmGenresList = filmElement.getElementsByTagName("cat");
                     ArrayList<String> filmGenres = parseGenres(filmGenresList);
                     NodeList filmIdList = filmElement.getElementsByTagName("fid");
                     String filmId = parseFilmId(filmIdList);
