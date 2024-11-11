@@ -52,7 +52,7 @@
                                 <!-- Concatenate and pipe SQL commands -->
                                 <exec executable="bash" dir="${project.basedir}">
                                     <arg value="-c"/>
-                                    <arg value=" cat sql_commands_start.sql movie_sql_commands.sql star_sql_commands.sql commit_sql_command.sql cast_sql_commands.sql commit_sql_command.sql sql_commands_end.sql | sudo mysql -u mytestuser -p 2>>error.log"/>
+                                    <arg value=" cat sql_commands_start.sql movie_sql_commands.sql star_sql_commands.sql commit_sql_command.sql cast_sql_commands.sql commit_sql_command.sql sql_commands_end.sql | mysql -h 127.0.0.1 -P 3306 -u mytestuser -p"/>
                                 </exec>
 
                                 <!-- Cleanup files -->

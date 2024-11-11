@@ -3,7 +3,7 @@ import java.io.IOException;
 import java.util.List;
 
 public class InsertCastBatch {
-    private static final String INSERT_SQL_TEMPLATE = "INSERT IGNORE INTO stage_stars_in_movies (movieId, starId) VALUES ('%s', '%s');";
+    private static final String INSERT_SQL_TEMPLATE = "INSERT IGNORE INTO stars_in_movies (movieId, starId) VALUES ('%s', '%s');";
 
     public void batchInsertCasts(List<Cast> casts) {
         try (FileWriter writer = new FileWriter(Main.SQL_CAST, true)) {

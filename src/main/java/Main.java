@@ -25,42 +25,7 @@ public class Main {
             e.printStackTrace();
         }
         try (FileWriter writer = new FileWriter(SQL_START)) {
-            writer.write("USE moviedb; SET GLOBAL autocommit = 0;" + System.lineSeparator() +
-                    "DROP TABLE IF EXISTS stage_ratings;" + System.lineSeparator() +
-                    "DROP TABLE IF EXISTS stage_stars_in_movies;" + System.lineSeparator() +
-                    "DROP TABLE IF EXISTS stage_genres_in_movies;" + System.lineSeparator() +
-                    "DROP TABLE IF EXISTS stage_movies;" + System.lineSeparator() +
-                    "DROP TABLE IF EXISTS stage_stars;" + System.lineSeparator() +
-                    "DROP TABLE IF EXISTS stage_genres;" + System.lineSeparator() +
-                    "CREATE TABLE stage_movies (" + System.lineSeparator() +
-                    "    id VARCHAR(10) PRIMARY KEY, " + System.lineSeparator() +
-                    "    title VARCHAR(100) DEFAULT '' NOT NULL, " + System.lineSeparator() +
-                    "    year INT," + System.lineSeparator() +
-                    "    director VARCHAR(100) DEFAULT '' NOT NULL);" + System.lineSeparator() +
-                    "CREATE TABLE stage_stars (" + System.lineSeparator() +
-                    "    id VARCHAR(20) PRIMARY KEY," + System.lineSeparator() +
-                    "    name VARCHAR(100) DEFAULT '' NOT NULL," + System.lineSeparator() +
-                    "    birthYear INT);" + System.lineSeparator() +
-                    "CREATE TABLE stage_stars_in_movies (" + System.lineSeparator() +
-                    "    starId VARCHAR(20) NOT NULL," + System.lineSeparator() +
-                    "    movieId VARCHAR(10) NOT NULL," + System.lineSeparator() +
-                    "    PRIMARY KEY (starId, movieId)," + System.lineSeparator() +
-                    "    FOREIGN KEY (starId) REFERENCES stage_stars(id)," + System.lineSeparator() +
-                    "    FOREIGN KEY (movieId) REFERENCES stage_movies(id));" + System.lineSeparator() +
-                    "CREATE TABLE stage_genres (" + System.lineSeparator() +
-                    "    id INT AUTO_INCREMENT PRIMARY KEY," + System.lineSeparator() +
-                    "    name VARCHAR(32) DEFAULT '' NOT NULL UNIQUE);" + System.lineSeparator() +
-                    "CREATE TABLE stage_genres_in_movies (" + System.lineSeparator() +
-                    "    genreId INT NOT NULL," + System.lineSeparator() +
-                    "    movieId VARCHAR(10) NOT NULL," + System.lineSeparator() +
-                    "    PRIMARY KEY (genreId, movieId)," + System.lineSeparator() +
-                    "    FOREIGN KEY (genreId) REFERENCES stage_genres(id)," + System.lineSeparator() +
-                    "    FOREIGN KEY (movieId) REFERENCES stage_movies(id));" + System.lineSeparator() +
-                    "CREATE TABLE stage_ratings (" + System.lineSeparator() +
-                    "    movieId VARCHAR(10) PRIMARY KEY," + System.lineSeparator() +
-                    "    rating FLOAT NOT NULL," + System.lineSeparator() +
-                    "    numVotes INT NOT NULL," + System.lineSeparator() +
-                    "    FOREIGN KEY (movieId) REFERENCES stage_movies(id));" + System.lineSeparator()
+            writer.write("USE moviedb; SET GLOBAL autocommit = 0;" + System.lineSeparator()
             );
         } catch (IOException e) {
             e.printStackTrace();

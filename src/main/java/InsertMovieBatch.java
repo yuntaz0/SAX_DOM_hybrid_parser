@@ -4,14 +4,20 @@ import java.util.List;
 
 public class InsertMovieBatch {
     private static final String INSERT_MOVIE_SQL_TEMPLATE =
-            "INSERT IGNORE INTO stage_movies (id, title, year, director) VALUES ('%s', '%s', %d, '%s');";
-//    private static final String INSERT_GENRE_SQL_TEMPLATE =
-//            "INSERT IGNORE INTO stage_genres (name) VALUES ('%s');";
-//    private static final String INSERT_GENRES_IN_MOVIES_SQL_TEMPLATE =
-//            "INSERT IGNORE INTO stage_genres_in_movies (movieId, genreId) " +
-//                    "VALUES ('%s', (SELECT id FROM stage_genres WHERE name = '%s'));";
+            "INSERT IGNORE INTO movies (id, title, year, director) VALUES ('%s', '%s', %d, '%s');";
+
     private static final String INSERT_RATING_SQL_TEMPLATE =
-            "INSERT IGNORE INTO stage_ratings (movieId, rating, numVotes) VALUES ('%s', %.1f, %d);";
+            "INSERT IGNORE INTO ratings (movieId, rating, numVotes) VALUES ('%s', %.1f, %d);";
+
+    private static final String INSERT_GENRE_SQL_TEMPLATE =
+            "INSERT IGNORE INTO genres (name) VALUES ('%s');";
+
+    private static final String INSERT_GENRES_IN_MOVIES_SQL_TEMPLATE =
+            "INSERT IGNORE INTO genres_in_movies (movieId, genreId) " +
+                    "VALUES ('%s', (SELECT id FROM genres WHERE name = '%s'));";
+
+    private static final String INSERT_PRICE_SQL_TEMPLATE =
+            "INSERT IGNORE INTO prices (movieId, price) VALUES ('%s', %.2f);";
 
     public void batchInsertMovies(List<Movie> movies) {
         StringBuilder sqlStatements = new StringBuilder();
@@ -27,24 +33,25 @@ public class InsertMovieBatch {
 
             sqlStatements.append(movieInsertSql).append(System.lineSeparator());
 
-//            if (movie.getGenres() != null) {
-//                for (String genre : movie.getGenres()) {
-//                    String genreEscaped = genre.replace("'", "''");
-//                    String genreInsertSql = String.format(INSERT_GENRE_SQL_TEMPLATE, genreEscaped);
-//                    sqlStatements.append(genreInsertSql).append(System.lineSeparator());
-//
-//                    String genreInMoviesSql = String.format(INSERT_GENRES_IN_MOVIES_SQL_TEMPLATE,
-//                            movie.getId(), genreEscaped);
-//                    sqlStatements.append(genreInMoviesSql).append(System.lineSeparator());
-//                }
-//            }
-
+            if (movie.getGenres() != null) {
+                for (String genre : movie.getGenres()) {
+                    String genreEscaped = genre.replace("'", "''");
+                    String genreInsertSql = String.format(INSERT_GENRE_SQL_TEMPLATE, genreEscaped);
+                    sqlStatements.append(genreInsertSql).append(System.lineSeparator());
+                    String genreInMoviesSql = String.format(INSERT_GENRES_IN_MOVIES_SQL_TEMPLATE,
+                            movie.getId(), genreEscaped);
+                    sqlStatements.append(genreInMoviesSql).append(System.lineSeparator());
+                }
+            }
 
             String ratingInsertSql = String.format(INSERT_RATING_SQL_TEMPLATE,
                     movie.getId(),
                     movie.getRating(),
                     movie.getVotes());
             sqlStatements.append(ratingInsertSql).append(System.lineSeparator());
+
+            String priceInsertSql = String.format(INSERT_PRICE_SQL_TEMPLATE, movie.getId(), movie.getPrice());
+            sqlStatements.append(priceInsertSql).append(System.lineSeparator());
         }
 
         try (FileWriter writer = new FileWriter(Main.SQL_MOVIE, true)) {

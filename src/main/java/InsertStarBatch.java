@@ -3,7 +3,7 @@ import java.io.IOException;
 import java.util.List;
 
 public class InsertStarBatch {
-    private static final String INSERT_SQL_TEMPLATE = "INSERT IGNORE INTO stage_stars (id, name, birthYear) VALUES ('%s', '%s', %d);";
+    private static final String INSERT_SQL_TEMPLATE = "INSERT IGNORE INTO stars (id, name, birthYear) VALUES ('%s', '%s', %d);";
 
     public void batchInsertStars(List<Star> stars) {
         try (FileWriter writer = new FileWriter(Main.SQL_STAR, true)) {
